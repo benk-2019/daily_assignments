@@ -1,0 +1,58 @@
+Terms/Investment Metrics:
+
+Metric(And asscociated terminolofy explanation)
+    -Portfolio
+    
+    -Total Return - The total profit or loss
+    
+    -Cumulativer Return - The total profit/loss up to a given row/date
+    
+    -??Annualzied Return - The return for the Given year? OR Over last year?
+    
+    -Volatility - How quickly and how much prices change over time
+            *How does he want it calculated?
+            *Calculate standard deviation of prices over time, pandas std
+                +sqrt((sum((x_i - avg)^2))/number_of_elements)
+    -Sharpe Ratio - (expected return - risk free return)/volatitity of returns
+    
+    -Stocks and ETFs-Stonks and "Exchange-Traded Funds", and investment in 
+                    a bundle of stocks and "trades"
+    
+    -10-Day and 100-Dat Mover Averages relative to market indexes-
+        *Got dis, just use SQL moving agg
+
+    -Beta - covariance/variance, similar to volatility
+            *Sample variance = SUM((element-avg)^2)/(num_elements - 1)
+            *Covariance? is SUM((x_i - avg_x)(y_i-avg_y))/n, where y and x are
+            what we care comparing, comparison of how one changing effects the
+            other
+    -Indices - ?
+    
+    -Price Index - (SUM(prices_current in index)/SUM(prices_past in index))
+    
+    -Comparison ot the Total Stock Market Index -
+    
+    -Forex - Conversion of one currency to another bu a specic rate(Forex Rate)
+    
+    -Percentage Change - (new-old)/old
+
+    -Index mutual fund - How diff from ETF? Only traded after market close vs during market hour
+
+Other Terms:
+    -KPI - Key Performance Indicator
+        *How calc dis?
+
+
+
+-In class going over it notes:
+    -Where should cleaning take place? Pythoin or SQL? --- pandas
+        -Transfromation in SQL(then send back to pandas for visualization)
+        -Visualization is Pandas
+    -Polygon.io is a stock market api
+        -sign up for free version
+        -stock agg
+            -mulitplier is times to get data throughout time span
+
+    -Doing all requirements - 80% need to do more for 100%
+    -Presentation Time? --- 10-15min
+    -What use for agg? Pandas? SQL? Polygon.io?
