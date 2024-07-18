@@ -1,0 +1,55 @@
+-Driver node(8 core, 156GB mem)
+
+-14xWorker
+	-8 core - 1 core = 7 cores
+	-156GB - 1GB = 155GB
+
+-Let's do 7 executors with one task slot -> 22.142GB per executor
+	-Would want to split up into multiple executors theoretically, but 7 is a prime number
+
+Per executor:
+	10% of memory for over head = 2.2142GB : 19.928GB left
+	1GB for python : 18.928 GB left
+	Heap:
+		75% for storage and execution = 14.196GB : 4.732 GB left
+			-7.098GB each
+		.3GB reserve mem : 4.432GB left
+		=>user gets 4.432 GB
+
+=> Realistic amount of data we could handle(assume 2 tasks per slot):
+	7 executors/node * 14 nodes = 98 task slots
+	7.098/x = .4GB, x =17.745 ~ 18 Tasks per task slot
+	=> 7.098/18 = 394MB
+	98 task slots * 18 tasks/slot * .394 GB/task = 695.016 GB ~= .7TB
+
+Which means we would have pretty significant spill onto disk and suboptimal # of tasks per
+task slot=> more memory, more cores
+	=>can increase core count of worker nodes to support optimal tasks per task slot
+	 and increase number of workers to support most, if not all of the 4.2TB in 
+	execution memory
+
+
+Scaling soln:
+We want .4GB per task with 4 tasks per task slot => want 1.6GB per task slot
+
+How many cores per worker?:
+(155/x)*(.9 for heap)*(.75 for storage and execution)*(.5 for execution) = 1.6
+=> x = 34 cores per worker ~= 36 cores => (155/(36 - 1 node mang))*.9*.75*.5 = 1.495 GB per task slot
+=> 373.75 MB per task, pretty optimal
+=> Workers?
+	x workers * 35 task slots/worker * 4tasks/task slot * 373.75MB/task ~= 4200GB
+	=> 80 workers => 4.186TB
+
+So end config would be:
+80 worker nodes with 36 cores and 156GB of memory to optimally run our data set
+
+
+Original problem, but what if driver ran on worker node?:
+	Same calculation, but assume that driver takes up one executor, whcih we assumed takes
+	one core each =>
+	Only change final capacity:
+	97*18*.394 = 687.924GB
+
+	This is a small change in what an optimal load would look like,
+	so it seems worth it to just run the drive on a worker node to avoid the additional cost
+	of running another worker node just for the driver.
